@@ -1,16 +1,19 @@
 trigger:
-- main  # Replace 'main' with the branch name you want to trigger on
+- none  # This pipeline is not triggered by source code changes
 
 pr:
-- '*'
+- none  # Exclude pull request triggers
 
 pool:
   vmImage: 'ubuntu-latest'
 
-stages:
-- stage: Build
-  jobs:
-  - job: BuildJob
-    steps:
-    - script: echo 'This is a placeholder build step.'
-      displayName: 'Build Step'
+jobs:
+- job: TriggerDevOpsPipeline
+  steps:
+  - script: |
+      # This is a placeholder script.
+      # You can perform any tasks you need here when the pipeline is triggered.
+      echo "DevOps pipeline triggered!"
+    displayName: 'Trigger DevOps Pipeline'
+
+  # Add more steps as needed for your specific pipeline requirements.
