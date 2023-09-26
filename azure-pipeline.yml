@@ -8,13 +8,16 @@ pool:
   vmImage: 'ubuntu-latest'
 
 stages:
-- stage: TriggerADF
+- stage: Build
   jobs:
-  - job: TriggerADF
+  - job: BuildJob
     steps:
-    - task: AzureDataFactory@1
-      inputs:
-        azureSubscription: '6373a757-98f6-48e6-acab-41a30e2627e1'  # Replace with your Azure subscription name
-        dataFactoryName: 'sermad-testing'  # Replace with your Azure Data Factory name
-        dataFactoryLocation: 'East Asia'  # Replace with your Azure Data Factory location
-        pipelineName: 'AzureDevops'  # Replace with your ADF pipeline name
+    - script: echo 'This is a placeholder build step.'
+      displayName: 'Build Step'
+
+- stage: Deploy
+  jobs:
+  - job: DeployJob
+    steps:
+    - script: echo 'This is a placeholder deployment step.'
+      displayName: 'Deployment Step'
