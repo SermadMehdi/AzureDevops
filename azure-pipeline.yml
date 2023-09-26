@@ -1,18 +1,36 @@
+trigger:
+- none
+
+pr:
+- none
 
 pool:
-  vmImage: 'windows-latest'  # Use an appropriate agent based on your project requirements
+  vmImage: 'ubuntu-latest'
 
 steps:
-- script: |
-    # Define your build steps here
-    # For example, let's assume you have a Node.js application
-    npm install
-    npm run build
-  displayName: 'Build Application'
-  workingDirectory: $(Build.SourcesDirectory)  # Set the working directory as per your project structure
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
+- task: UsePythonVersion@0
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)/dist'  # Define the path to your built artifacts
-    ArtifactName: 'webapp'  # Specify a name for the artifact
+    versionSpec: '3.x'
+    addToPath: true
+    architecture: 'x64'
+
+- script: |
+    # Log in to Azure using a service connection or a service principal
+    az login --service-principal -u ee36e6a6-05c7-46cc-8cf8-851c13e4ea8a -p QxJ8Q~FOQ.w4X5Y5tj6EAmPZ60q6D6jxbPEJzbru --tenant 36a13575-d209-4c82-a998-b67a504cb7cc
+
+    # Set the Azure subscription
+    az account set --subscription 6373a757-98f6-48e6-acab-41a30e2627e1
+
+    # Define container instance parameters
+    resourceGroupName=harpoon
+    containerName=pipelinetest
+    image=myregistry.azurecr.io/myimage:latest
+    cpu=1
+    memory=1.5
+    location=eastus
+
+    # Create the container instance
+    az container create --resource-group $resourceGroupName --name $containerName --image $image --cpu $cpu --memory $memory --location $location
+
+  displayName: 'Create Container Instance'
+
