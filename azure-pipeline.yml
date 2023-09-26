@@ -7,13 +7,44 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-- job: TriggerDevOpsPipeline
-  steps:
-  - script: |
-      # This is a placeholder script.
-      # You can perform any tasks you need here when the pipeline is triggered.
-      echo "DevOps pipeline triggered!"
-    displayName: 'Trigger DevOps Pipeline'
+variables:
+  # Define your Azure subscription and resource group variables here
+  azureSubscription: '6373a757-98f6-48e6-acab-41a30e2627e1'
+  resourceGroup: 'harpoon'
+  containerName: 'sermadtest123'
+  containerImage: 'nginx'
+  
+  # Define your service principal variables here
+  servicePrincipalId: '"ee36e6a6-05c7-46cc-8cf8-851c13e4ea8a'
+  servicePrincipalKey: 'QxJ8Q~FOQ.w4X5Y5tj6EAmPZ60q6D6jxbPEJzbru'
+  tenantId: '36a13575-d209-4c82-a998-b67a504cb7cc'
 
-  # Add more steps as needed for your specific pipeline requirements.
+jobs:
+- job: CreateContainerInstance
+  steps:
+  - task: UseAzureCLI@2
+    inputs:
+      azureSubscription: $(azureSubscription)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        # Log in to Azure
+        az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+
+        # Create a resource group
+        az group create --name $(resourceGroup) --location eastus
+
+        # Create an Azure Container Instance
+        az container create --resource-group $(resourceGroup) --name $(containerName) --image $(containerImage) --cpu 0.5 --memory 0.5Gi --restart-policy OnFailure --ports 80
+
+  - task: UseAzureCLI@2
+    inputs:
+      azureSubscription: $(azureSubscription)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        # Get the ACI IP address
+        aciIP=$(az container show --resource-group $(resourceGroup) --name $(containerName) --query ipAddress.ip --output tsv)
+        echo "ACI IP Address: $aciIP"
+
+  # Add more steps as needed for your specific pipeline requirements
