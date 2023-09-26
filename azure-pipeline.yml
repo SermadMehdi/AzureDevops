@@ -14,10 +14,3 @@ stages:
     steps:
     - script: echo 'This is a placeholder build step.'
       displayName: 'Build Step'
-
-- stage: Deploy
-  jobs:
-  - job: DeployJob
-    steps:
-    - script: echo 'This is a placeholder deployment step.'
-      displayName: 'Deployment Step'
