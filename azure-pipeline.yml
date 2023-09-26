@@ -1,50 +1,35 @@
 trigger:
-- none  # This pipeline is not triggered by source code changes
+- none
 
 pr:
-- none  # Exclude pull request triggers
+- none
 
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  # Define your Azure subscription and resource group variables here
-  azureSubscription: '6373a757-98f6-48e6-acab-41a30e2627e1'
-  resourceGroup: 'harpoon'
-  containerName: 'sermadtest123'
-  containerImage: 'nginx'
-  
-  # Define your service principal variables here
-  servicePrincipalId: '"ee36e6a6-05c7-46cc-8cf8-851c13e4ea8a'
-  servicePrincipalKey: 'QxJ8Q~FOQ.w4X5Y5tj6EAmPZ60q6D6jxbPEJzbru'
-  tenantId: '36a13575-d209-4c82-a998-b67a504cb7cc'
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+    architecture: 'x64'
 
-jobs:
-- job: CreateContainerInstance
-  steps:
-  - task: UseAzureCLI@2
-    inputs:
-      azureSubscription: $(azureSubscription)
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        # Log in to Azure
-        az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+- script: |
+    # Log in to Azure using a service connection or a service principal
+    az login --service-principal -u ee36e6a6-05c7-46cc-8cf8-851c13e4ea8a -p QxJ8Q~FOQ.w4X5Y5tj6EAmPZ60q6D6jxbPEJzbru> --tenant 36a13575-d209-4c82-a998-b67a504cb7cc
 
-        # Create a resource group
-        az group create --name $(resourceGroup) --location eastus
+    # Set the Azure subscription
+    az account set --subscription 6373a757-98f6-48e6-acab-41a30e2627e1
 
-        # Create an Azure Container Instance
-        az container create --resource-group $(resourceGroup) --name $(containerName) --image $(containerImage) --cpu 0.5 --memory 0.5Gi --restart-policy OnFailure --ports 80
+    # Define container instance parameters
+    resourceGroupName=harpoon
+    containerName=pipelinetest
+    image=myregistry.azurecr.io/myimage:latest
+    cpu=1
+    memory=1.5
+    location=eastus
 
+    # Create the container instance
+    az container create --resource-group $resourceGroupName --name $containerName --image $image --cpu $cpu --memory $memory --location $location
 
-  - task: AzureCLI@2
-    inputs:
-      scriptType: 'batch'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        # Get the ACI IP address
-                aciIP=$(az container show --resource-group $(resourceGroup) --name $(containerName) --query ipAddress.ip --output tsv)
-                echo "ACI IP Address: $aciIP"
-
-  # Add more steps as needed for your specific pipeline requirements
+  displayName: 'Create Container Instance'
