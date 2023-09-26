@@ -1,0 +1,20 @@
+trigger:
+- main  # Replace 'main' with the branch name you want to trigger on
+
+pr:
+- '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: TriggerADF
+  jobs:
+  - job: TriggerADF
+    steps:
+    - task: AzureDataFactory@1
+      inputs:
+        azureSubscription: '6373a757-98f6-48e6-acab-41a30e2627e1'  # Replace with your Azure subscription name
+        dataFactoryName: 'sermad-testing'  # Replace with your Azure Data Factory name
+        dataFactoryLocation: 'East Asia'  # Replace with your Azure Data Factory location
+        pipelineName: 'YourPipelineName'  # Replace with your ADF pipeline name
