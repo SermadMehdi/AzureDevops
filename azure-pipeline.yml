@@ -1,5 +1,3 @@
-trigger:
-- master  # Define the branch to trigger the pipeline
 
 pool:
   vmImage: 'windows-latest'  # Use an appropriate agent based on your project requirements
