@@ -37,14 +37,14 @@ jobs:
         # Create an Azure Container Instance
         az container create --resource-group $(resourceGroup) --name $(containerName) --image $(containerImage) --cpu 0.5 --memory 0.5Gi --restart-policy OnFailure --ports 80
 
-  - task: UseAzureCLI@2
+
+  - task: AzureCLI@2
     inputs:
-      azureSubscription: $(azureSubscription)
-      scriptType: 'bash'
+      scriptType: 'batch'
       scriptLocation: 'inlineScript'
       inlineScript: |
         # Get the ACI IP address
-        aciIP=$(az container show --resource-group $(resourceGroup) --name $(containerName) --query ipAddress.ip --output tsv)
-        echo "ACI IP Address: $aciIP"
+                aciIP=$(az container show --resource-group $(resourceGroup) --name $(containerName) --query ipAddress.ip --output tsv)
+                echo "ACI IP Address: $aciIP"
 
   # Add more steps as needed for your specific pipeline requirements
