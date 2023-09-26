@@ -16,7 +16,7 @@ steps:
 
 - script: |
     # Log in to Azure using a service connection or a service principal
-    az login --service-principal -u ee36e6a6-05c7-46cc-8cf8-851c13e4ea8a -p QxJ8Q~FOQ.w4X5Y5tj6EAmPZ60q6D6jxbPEJzbru> --tenant 36a13575-d209-4c82-a998-b67a504cb7cc
+    az login --service-principal -u ee36e6a6-05c7-46cc-8cf8-851c13e4ea8a -p QxJ8Q~FOQ.w4X5Y5tj6EAmPZ60q6D6jxbPEJzbru --tenant 36a13575-d209-4c82-a998-b67a504cb7cc
 
     # Set the Azure subscription
     az account set --subscription 6373a757-98f6-48e6-acab-41a30e2627e1
