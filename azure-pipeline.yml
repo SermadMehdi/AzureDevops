@@ -24,7 +24,7 @@ steps:
     # Define container instance parameters
     resourceGroupName=harpoon
     containerName=pipelinetest
-    image=sermadregistry.azurecr.io/myimage:latest
+    image=sermadtestregistry.azurecr.io/myimage:latest
     cpu=1
     memory=1.5
     location=eastus
