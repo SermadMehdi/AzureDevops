@@ -54,11 +54,11 @@ stages:
         azureSubscription: 'Pay-As-You-Go(6373a757-98f6-48e6-acab-41a30e2627e1)'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
-        inlineScript: 'curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash'
+        inlineScript: 
     
     - script: |
         az container create --resource-group harpoon --name sermadtestcontainer \
-          --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1.5Gi \
+          --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1.5 \
           --registry-login-server $(containerRegistry) --registry-username $(dockerRegistryServiceConnection.username) \
           --registry-password $(dockerRegistryServiceConnection.password) --sermad-container-app  --ports 80
       displayName: 'Create Container Instance'
