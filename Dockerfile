@@ -9,4 +9,4 @@ RUN apt-get clean
 
 # Your additional Dockerfile commands can go here
 
- CMD ["python", "your_script.py"]
+ CMD ["python", "test.py"]
