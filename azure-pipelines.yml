@@ -40,7 +40,7 @@ stages:
     - task: AzureCLI@2
       displayName: Create Azure Container Instance
       inputs:
-        azureSubscription: 6373a757-98f6-48e6-acab-41a30e2627e1
+        azureSubscription: Pay-As-You-Go(1)(6373a757-98f6-48e6-acab-41a30e2627e1)
         scriptType: 'bash'
         scriptLocation: 'scriptPath'
         scriptPath: '$(Build.SourcesDirectory)/create-aci.sh' # Path to your ACI creation script
