@@ -48,19 +48,19 @@ stages:
         versionSpec: '3.x'
         addToPath: true
 
+
     - task: AzureCLI@2
-      displayName: 'Install Azure CLI'
       inputs:
-        azureSubscription: 'Pay-As-You-Go(6373a757-98f6-48e6-acab-41a30e2627e1)'
+        azureSubscription: 'AllConnection'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
-        inlineScript: 
-    
-    - script: |
-        az container create --resource-group harpoon --name sermadtestcontainer \
-          --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1.5 \
-          --registry-login-server $(containerRegistry) --registry-username $(dockerRegistryServiceConnection.username) \
-          --registry-password $(dockerRegistryServiceConnection.password) --sermad-container-app  --ports 80
-      displayName: 'Create Container Instance'
-      env:
-        AZURE_SERVICE_CONNECTION_NAME: $(dockerRegistryServiceConnection)
+        inlineScript: |
+          - script: |
+                  az container create --resource-group harpoon --name sermadtestcontainer \
+                    --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1.5 \
+                    --registry-login-server $(containerRegistry) --registry-username $(dockerRegistryServiceConnection.username) \
+                    --registry-password $(dockerRegistryServiceConnection.password) --sermad-container-app  --ports 80
+                displayName: 'Create Container Instance'
+                env:
+                  AZURE_SERVICE_CONNECTION_NAME: $(dockerRegistryServiceConnection)
+        addSpnToEnvironment: true
