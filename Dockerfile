@@ -1,17 +1,12 @@
-# Use the official Python image from Docker Hub as the base image
-FROM python:3.8-slim
+# Use an official Python runtime as a parent image
+FROM python:3.8
 
-# Set the working directory in the container
-WORKDIR /app
+# Update and install pip
+RUN apt-get update && apt-get install -y python3-pip
 
-# Copy the requirements.txt file into the container at /app
-COPY requirements.txt /app/
+# Clean up the package cache
+RUN apt-get clean
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+# Your additional Dockerfile commands can go here
 
-# Copy the rest of the application code into the container
-COPY . /app/
-
-# Define the command to run your application
-CMD ["python", "app.py"]
+# CMD ["python", "your_script.py"]
