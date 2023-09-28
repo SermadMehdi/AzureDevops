@@ -33,34 +33,3 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-
-- stage: DeployContainerInstance
-  displayName: Deploy Container Instance
-  jobs:
-  - job: DeployContainer
-    displayName: Deploy Container
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: UsePythonVersion@0
-      displayName: 'Use Python 3.x'
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-
-
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'AllConnection'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          - script: |
-                  az container create --resource-group harpoon --name sermadtestcontainer \
-                    --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1.5 \
-                    --registry-login-server $(containerRegistry) --registry-username $(dockerRegistryServiceConnection.username) \
-                    --registry-password $(dockerRegistryServiceConnection.password) --sermad-container-app  --ports 80
-                displayName: 'Create Container Instance'
-                env:
-                  AZURE_SERVICE_CONNECTION_NAME: $(dockerRegistryServiceConnection)
-        addSpnToEnvironment: true
