@@ -40,3 +40,9 @@ stages:
     - task: CmdLine@2
       inputs:
         script: 'echo Hello world'
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Pay-As-You-Go(6373a757-98f6-48e6-acab-41a30e2627e1)'
+        scriptType: 'bash'
+        scriptLocation: 'scriptPath'
+        scriptPath: '$(Build.SourcesDirectory)/create-aci.sh'
