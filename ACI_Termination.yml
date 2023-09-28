@@ -1,0 +1,30 @@
+trigger:
+- none
+
+pr:
+- none
+
+resources:
+- repo: self
+
+stages:
+- stage: Terminate
+  displayName: Terminate ACI
+  jobs:
+  - job: Terminate
+    displayName: Terminate ACI
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'AllConnection'  # Replace with the name of your Azure service connection
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Define the name of the ACI to be deleted
+          aciName='sermadtestcontainer'  # Replace with your ACI name
+          resourceGroup='harpoon'  # Replace with your resource group name
+
+          # Delete the ACI
+          az container delete --resource-group $resourceGroup --name $aciName --yes --no-wait
