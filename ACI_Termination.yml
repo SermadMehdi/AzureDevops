@@ -27,4 +27,4 @@ stages:
           resourceGroup='harpoon'  # Replace with your resource group name
 
           # Delete the ACI
-          az container delete --resource-group $resourceGroup --name $aciName --yes --no-wait
+          az container delete --resource-group $resourceGroup --name $aciName --yes
