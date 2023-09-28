@@ -33,3 +33,11 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'AllConnection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Define the script to create the ACI
+                az container create --resource-group harpoon --name sermadtestcontainer --image sermadregistry.azurecr.io/sermadtestimage:44 --cpu 0.75 --memory 1.5 --registry-login-server sermadregistry.azurecr.io --registry-username sermadregistry --registry-password RlSzeKGcLJsv16ATAd1gqXvuqx7Py8vMeXGTXUqb+f+ACRAs/ohh --dns-name-label sermad-contain --ports 80
