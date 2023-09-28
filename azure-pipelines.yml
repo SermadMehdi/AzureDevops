@@ -37,9 +37,6 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-    - task: CmdLine@2
-      inputs:
-            script: 'echo Hello world'
     - task: AzureCLI@2
       displayName: Create Azure Container Instance
       inputs:
