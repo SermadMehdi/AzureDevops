@@ -21,14 +21,17 @@ steps:
     # Set the Azure subscription
     az account set --subscription 6373a757-98f6-48e6-acab-41a30e2627e1
 
-    # Define ACR and image details
+    # Define ACR details
     acrName=sermadregistry
-    imageName=myimage
     imageTag=latest
-    imageSourceDir=SermadMehdi/AzureDevops/Dockerfile
+    imageSourceDir=SermadMehdi/AzureDevops
+
+    # Set ACR username and password as environment variables
+    export ACR_USERNAME=sermadregistry
+    export ACR_PASSWORD=RlSzeKGcLJsv16ATAd1gqXvuqx7Py8vMeXGTXUqb+f+ACRAs/ohh
 
     # Build the Docker image
-    az acr build --registry $acrName --image $imageName:$imageTag $imageSourceDir
+    az acr build --registry $acrName --image $acrName.azurecr.io/$imageName:$imageTag --build-arg ACR_USERNAME --build-arg ACR_PASSWORD $imageSourceDir
 
     # Define container instance parameters
     resourceGroupName=harpoon
