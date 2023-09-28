@@ -21,17 +21,23 @@ steps:
     # Set the Azure subscription
     az account set --subscription 6373a757-98f6-48e6-acab-41a30e2627e1
 
+    # Define ACR and image details
+    acrName=sermadregistry
+    imageName=myimage
+    imageTag=latest
+    imageSourceDir=SermadMehdi/AzureDevops/Dockerfile
+
+    # Build the Docker image
+    az acr build --registry $acrName --image $imageName:$imageTag $imageSourceDir
+
     # Define container instance parameters
     resourceGroupName=harpoon
     containerName=pipelinetest
-    image=sermadtestregistry.azurecr.io/myimage:latest
     cpu=1
     memory=1.5
     location=eastus
 
     # Create the container instance
-    az container create --resource-group $resourceGroupName --name $containerName --image $image --cpu $cpu --memory $memory --location $location --registry-username ee36e6a6-05c7-46cc-8cf8-851c13e4ea8a --registry-password QxJ8Q~FOQ.w4X5Y5tj6EAmPZ60q6D6jxbPEJzbru
+    az container create --resource-group $resourceGroupName --name $containerName --image $acrName.azurecr.io/$imageName:$imageTag --cpu $cpu --memory $memory --location $location
 
-
-  displayName: 'Create Container Instance'
-
+  displayName: 'Build Docker Image and Create Container Instance'
