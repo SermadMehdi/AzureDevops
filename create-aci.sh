@@ -22,4 +22,4 @@ az container create \
     --dns-name-label sermad-aci-instance # Replace with your DNS label
 
 # Check the status of the ACI deployment (optional)
-az container show --resource-group harpoon> --name $CONTAINER_GROUP_NAME --query 'instanceView.state'
+az container show --resource-group harpoon --name $CONTAINER_GROUP_NAME --query 'instanceView.state'
