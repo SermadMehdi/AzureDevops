@@ -33,11 +33,19 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+
+    # Capture the Docker image details in pipeline variables
+    - script: |
+        echo "##vso[task.setvariable variable=imageName]$(containerRegistry)/$(imageRepository):$(tag)"
+      displayName: 'Set Image Name Variable'
+      
     - task: AzureCLI@2
       inputs:
         azureSubscription: 'AllConnection'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+          # Use the predefined pipeline variable to get the image details
+          imageName=$(imageName)
           # Define the script to create the ACI
-                az container create --resource-group harpoon --name sermadtestcontainer --image sermadregistry.azurecr.io/sermadtestimage:44 --cpu 0.75 --memory 1.5 --registry-login-server sermadregistry.azurecr.io --registry-username sermadregistry --registry-password RlSzeKGcLJsv16ATAd1gqXvuqx7Py8vMeXGTXUqb+f+ACRAs/ohh --dns-name-label sermad-contain --ports 80
+          az container create --resource-group harpoon --name sermadtestcontainer --image $imageName --cpu 0.75 --memory 1.5 --registry-login-server sermadregistry.azurecr.io --registry-username sermadregistry --registry-password RlSzeKGcLJsv16ATAd1gqXvuqx7Py8vMeXGTXUqb+f+ACRAs/ohh --dns-name-label sermad-contain --ports 80
