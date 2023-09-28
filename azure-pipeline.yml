@@ -30,7 +30,8 @@ steps:
     location=eastus
 
     # Create the container instance
-    az container create --resource-group $resourceGroupName --name $containerName --image $image --cpu $cpu --memory $memory --location $location
+    az container create --resource-group $resourceGroupName --name $containerName --image $image --cpu $cpu --memory $memory --location $location --registry-username ee36e6a6-05c7-46cc-8cf8-851c13e4ea8a --registry-password QxJ8Q~FOQ.w4X5Y5tj6EAmPZ60q6D6jxbPEJzbru
+
 
   displayName: 'Create Container Instance'
 
