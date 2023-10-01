@@ -20,10 +20,17 @@ steps:
   workingDirectory: $(Build.SourcesDirectory)
 
 - script: |
+    echo "Logging in to Azure CLI using the service connection"
+    az login --service-principal -u $(serviceConnectionUsername) -p $(serviceConnectionPassword) --tenant $(serviceConnectionTenant)
+
     echo "Creating Azure Container Instance for DBT Core"
     az container create --resource-group harpoon \
-                       --name dbt-core-container \
-                       --image sermadregistry.azurecr.io/dbt-core:latest \
-                       --cpu 1 --memory 1.5 \
-                       --restart-policy OnFailure
+                        --name dbt-core-container \
+                        --image sermadregistry.azurecr.io/dbt-core:latest \
+                        --cpu 1 --memory 1.5 \
+                        --restart-policy OnFailure
   displayName: 'Create DBT Core Container'
+  env:
+    serviceConnectionUsername: $(AllConnection.servicePrincipalId)
+    serviceConnectionPassword: $(AllConnection.servicePrincipalKey)
+    serviceConnectionTenant: $(AllConnection.servicePrincipalTenantId)
