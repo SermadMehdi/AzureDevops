@@ -1,0 +1,15 @@
+name: 'dbtoncloud'
+version: '1.0.0'
+
+profile: 'default'
+
+source-paths: ["models"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+    - "target"
+
+models:
+    dbtoncloud:
+      example:
+          materialized: view
