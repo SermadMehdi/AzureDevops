@@ -54,3 +54,12 @@ stages:
         artifactName: 'ACIStatus'
         publishLocation: 'Container'
       displayName: 'Publish ACI Status as Artifact'
+      
+    - script: |
+        echo "Build.ArtifactStagingDirectory = $(Build.ArtifactStagingDirectory)"
+        aciStatus=$(az container show --resource-group harpoon --name sermadtestcontainer --query 'provisioningState' -o tsv)
+        echo "ACI Status: $aciStatus"
+
+        # Write the status to a file for debugging
+        echo "$aciStatus" > $(Build.ArtifactStagingDirectory)/aci_status.txt
+      displayName: 'Capture ACI Creation Status and Debug'
