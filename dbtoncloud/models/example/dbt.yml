@@ -21,13 +21,12 @@ steps:
 
 - script: |
     echo "Logging in to Azure CLI using the service connection"
-    az login --service-principal -u $(serviceConnectionUsername) -p $(serviceConnectionPassword) --tenant $(serviceConnectionTenant)
+    az login --service-principal -u AllConnection -p yOT8Q~RsyQXVoPh.scbw~Z54K5EiQAvCB-c-ZbsQ --tenant 36a13575-d209-4c82-a998-b67a504cb7cc
 
     echo "Creating Azure Container Instance for DBT Core"
-       az container create --resource-group harpoon --name dbt-core-container --image $imageName --cpu 0.75 --memory 1.5 --registry-login-server sermadregistry.azurecr.io --registry-username sermadregistry --registry-password RlSzeKGcLJsv16ATAd1gqXvuqx7Py8vMeXGTXUqb+f+ACRAs/ohh --dns-name-label sermad-contain --ports 80
+    az container create --resource-group harpoon \
+                        --name dbt-core-container \
+                        --image sermadregistry.azurecr.io/dbt-core:latest \
+                        --cpu 1 --memory 1.5 \
+                        --restart-policy OnFailure
   displayName: 'Create DBT Core Container'
-  env:
-    serviceConnectionUsername: $(AllConnection.servicePrincipalId)
-    serviceConnectionPassword: $(AllConnection.servicePrincipalKey)
-    serviceConnectionTenant: $(AllConnection.servicePrincipalTenantId)
-
