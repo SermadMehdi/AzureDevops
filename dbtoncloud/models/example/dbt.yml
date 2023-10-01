@@ -1,0 +1,19 @@
+trigger:
+  branches:
+    include:
+      - dbt
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: |
+    echo "Logging in to Azure Container Registry"
+    az acr login --sermadregistry
+
+    echo "Building DBT core image"
+    docker build -t sermadregistry.azurecr.io/dbt-core:latest .
+
+    echo "Pushing DBT core image to ACR"
+    docker push sermadregistry.azurecr.io/dbt-core:latest
+  displayName: 'Build and Push DBT Core Image'
