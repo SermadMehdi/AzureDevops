@@ -21,7 +21,7 @@ steps:
 
 - script: |
     echo "Logging in to Azure CLI using the service connection"
-    az login --service-principal -u $(serviceConnectionUsername) -p $(serviceConnectionPassword) --tenant $(serviceConnectionTenant)
+    az login --service-principal -u 68780fde-5c40-463c-8d01-ebe6ade7486b -p hP38Q~e5ZB9l3ORIyTG2_JxqFjcuUyqjek4iiasH --tenant 36a13575-d209-4c82-a998-b67a504cb7cc
 
     echo "Creating Azure Container Instance for DBT Core"
     az container create --resource-group harpoon \
@@ -30,7 +30,4 @@ steps:
                         --cpu 1 --memory 1.5 \
                         --restart-policy OnFailure
   displayName: 'Create DBT Core Container'
-  env:
-    serviceConnectionUsername: $(AllConnection.servicePrincipalId)
-    serviceConnectionPassword: $(AllConnection.servicePrincipalKey)
-    serviceConnectionTenant: $(AllConnection.servicePrincipalTenantId)
+
