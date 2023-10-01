@@ -24,6 +24,6 @@ steps:
     az container create --resource-group harpoon \
                        --name dbt-core-container \
                        --image sermadregistry.azurecr.io/dbt-core:latest \
-                       --cpu 0.75 --memory 1.5Gi \
+                       --cpu 1 --memory 1.5 \
                        --restart-policy OnFailure
   displayName: 'Create DBT Core Container'
