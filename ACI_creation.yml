@@ -39,13 +39,18 @@ stages:
         echo "##vso[task.setvariable variable=imageName]$(containerRegistry)/$(imageRepository):$(tag)"
       displayName: 'Set Image Name Variable'
       
-    - task: AzureCLI@2
+    - script: |
+        # Capture the ACI creation status
+        aciStatus=$(az container show --resource-group harpoon --name sermadtestcontainer --query 'provisioningState' -o tsv)
+
+        # Write the status to a file
+        echo "$aciStatus" > $(Build.ArtifactStagingDirectory)/aci_status.txt
+      displayName: 'Capture ACI Creation Status'
+
+    # Publish the status file as an artifact
+    - task: PublishBuildArtifacts@1
       inputs:
-        azureSubscription: 'AllConnection'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          # Use the predefined pipeline variable to get the image details
-          imageName=$(imageName)
-          # Define the script to create the ACI
-          az container create --resource-group harpoon --name sermadtestcontainer --image $imageName --cpu 0.75 --memory 1.5 --registry-login-server sermadregistry.azurecr.io --registry-username sermadregistry --registry-password RlSzeKGcLJsv16ATAd1gqXvuqx7Py8vMeXGTXUqb+f+ACRAs/ohh --dns-name-label sermad-contain --ports 80
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'ACIStatus'
+        publishLocation: 'Container'
+      displayName: 'Publish ACI Status as Artifact'
