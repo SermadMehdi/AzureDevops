@@ -28,6 +28,7 @@ steps:
                         --name dbt-core-container \
                         --image sermadregistry.azurecr.io/dbt-core:latest \
                         --cpu 1 --memory 1.5 \
-                        --restart-policy OnFailure
+                        --restart-policy OnFailure \
+                        --registry-username sermadregistry \
+                        --registry-password RlSzeKGcLJsv16ATAd1gqXvuqx7Py8vMeXGTXUqb+f+ACRAs/ohh
   displayName: 'Create DBT Core Container'
-
