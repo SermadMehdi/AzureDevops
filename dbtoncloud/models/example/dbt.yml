@@ -17,3 +17,4 @@ steps:
     echo "Pushing DBT core image to ACR"
     docker push sermadregistry.azurecr.io/dbt-core:latest
   displayName: 'Build and Push DBT Core Image'
+  workingDirectory: $(Build.SourcesDirectory)  # Set the working directory to the root of the source directory
