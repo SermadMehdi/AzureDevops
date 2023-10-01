@@ -1,4 +1,4 @@
-debug: trigger:
+trigger:
   branches:
     include:
       - 'dbt'
