@@ -1,0 +1,69 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'AllConnection'
+    subscriptionId: '6373a757-98f6-48e6-acab-41a30e2627e1'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(resourceGroupName)'
+    location: '$(resourceGroupLocation)'
+    templateLocation: 'Linked artifact'
+    csmFile: 'AzureDevops/aciWithARM-master/ARMTemplates/ContainerRegistry.azrm.json'
+    deploymentMode: 'Incremental'
+    deploymentName: 'GetResourceNames_$(Release.ReleaseName)'
+    deploymentOutputs: 'DeploymentOutput'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $var=ConvertFrom-Json '$(DeploymentOutput)'
+      $REGISTRY_NAME=$var.registry_name.value
+      $REGISTRY_SERVER=$var.registry_server.value
+      $REGISTRY_USERNAME=$var.registry_username.value
+      $REGISTRY_PASSWORD=$var.registry_password.value
+      
+      ECHO $var.registry_name.value
+      ECHO $var.registry_server.value
+      ECHO $var.registry_username.value
+      ECHO  $var.registry_password.value
+      
+      Write-Host "##vso​[task.setvariable variable=REGISTRY_NAME]$REGISTRY_NAME"
+      Write-Host "##vso​[task.setvariable variable=REGISTRY_SERVER]$REGISTRY_SERVER"
+      Write-Host "##vso​[task.setvariable variable=REGISTRY_USERNAME]$REGISTRY_USERNAME"
+      Write-Host "##vso​[task.setvariable variable=REGISTRY_PASSWORD]$REGISTRY_PASSWORD"
+- task: Docker@2
+  inputs:
+    containerRegistry: 'sermadregistry'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'AllConnection'
+    subscriptionId: '6373a757-98f6-48e6-acab-41a30e2627e1'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'harpoon'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: 'AzureDevops/aciWithARM-master/ARMTemplates/ContainerInstance.azrm.json'
+    csmParametersFile: 'AzureDevops/aciWithARM-master/ARMTemplates/param.ContainerInstance.azrm.json'
+    overrideParameters: '-registryServerName $(REGISTRY_SERVER) -registryUserName $(REGISTRY_USERNAME) -registryPassword $(REGISTRY_PASSWORD) -image $(REGISTRY_NAME).azurecr.io/$(Build.Repository.Name):$(Build.BuildId)  -env_ENVIRONMENT_NAME  "DEV"'
+    deploymentMode: 'Incremental'
