@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "aciName": {
+      "type": "string",
+      "defaultValue": "your-aci-name"
+    },
+    "containerName": {
+      "type": "string",
+      "defaultValue": "your-container-name"
+    },
+    "dockerImage": {
+      "type": "string",
+      "defaultValue": "your-docker-image"
+    },
+    "cpuRequest": {
+      "type": "string",
+      "defaultValue": "0.5"
+    },
+    "memoryRequest": {
+      "type": "string",
+      "defaultValue": "1.5"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-10-01",
+      "name": "[parameters('aciName')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "location": "eastus",
+      "properties": {
+        "containers": [
+          {
+            "name": "[parameters('containerName')]",
+            "properties": {
+              "image": "[parameters('dockerImage')]",
+              "resources": {
+                "requests": {
+                  "cpu": "[parameters('cpuRequest')]",
+                  "memoryInGb": "[parameters('memoryRequest')]"
+                }
+              }
+            }
+          }
+        ],
+        "osType": "Linux",
+        "restartPolicy": "Always"
+      }
+    }
+  ]
+}
