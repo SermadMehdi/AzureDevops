@@ -41,7 +41,14 @@ steps:
 
     # Authenticate to Azure using service connection
     az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+
+    # Define the parameter values
+    aciName=$(aciName)
+    containerName=$(containerName)
+    dockerImage=$(dockerImage)
+    cpuRequest=$(cpuRequest)
+    memoryRequest=$(memoryRequest)
     
     # Deploy the ACI using the parameterized template file and parameters
-    az container create --resource-group $(resourceGroupName) --file template-aci.json --parameters aciName=$(aciName) containerName=$(containerName) dockerImage=$(dockerImage) cpuRequest=$(cpuRequest) memoryRequest=$(memoryRequest)
+    az container create --resource-group $(resourceGroupName) --name $aciName --file template-aci.json --parameters aciName=$aciName containerName=$containerName dockerImage=$dockerImage cpuRequest=$cpuRequest memoryRequest=$memoryRequest
   displayName: 'Create ACI Container'
