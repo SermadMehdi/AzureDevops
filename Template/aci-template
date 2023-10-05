@@ -2,51 +2,56 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "aciName": {
-      "type": "string",
-      "defaultValue": "your-aci-name"
-    },
     "containerName": {
       "type": "string",
-      "defaultValue": "your-container-name"
+      "metadata": {
+        "description": "Name of the container instance"
+      }
     },
-    "dockerImage": {
+    "image": {
       "type": "string",
-      "defaultValue": "your-docker-image"
+      "metadata": {
+        "description": "Docker image to run in the container"
+      }
     },
-    "cpuRequest": {
+    "cpu": {
       "type": "string",
-      "defaultValue": "0.5"
+      "metadata": {
+        "description": "CPU units (e.g., 0.5, 1.0)"
+      }
     },
-    "memoryRequest": {
+    "memory": {
       "type": "string",
-      "defaultValue": "1.5"
+      "metadata": {
+        "description": "Memory in GB (e.g., 1.5)"
+      }
     }
   },
   "resources": [
     {
-      "apiVersion": "2018-10-01",
-      "name": "[parameters('aciName')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
-      "location": "eastus",
+      "apiVersion": "2021-03-01",
+      "name": "[parameters('containerName')]",
+      "location": "[resourceGroup().location]",
       "properties": {
         "containers": [
           {
             "name": "[parameters('containerName')]",
             "properties": {
-              "image": "[parameters('dockerImage')]",
+              "image": "[parameters('image')]",
               "resources": {
                 "requests": {
-                  "cpu": "[parameters('cpuRequest')]",
-                  "memoryInGb": "[parameters('memoryRequest')]"
+                  "cpu": "[parameters('cpu')]",
+                  "memoryInGB": "[parameters('memory')]"
                 }
               }
             }
           }
         ],
-        "osType": "Linux",
-        "restartPolicy": "Always"
+        "osType": "Linux"
       }
     }
   ]
+,
+  "outputs": {}
 }
