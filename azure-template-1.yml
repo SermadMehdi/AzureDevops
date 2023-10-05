@@ -1,0 +1,38 @@
+trigger:
+- master
+
+pr:
+- '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+- job: DeployContainerInstance
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+      architecture: 'x64'
+
+  - script: |
+      az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+      az account set --subscription $(subscriptionId)
+      az group create --name $(resourceGroupName) --location $(resourceGroupLocation)
+      az deployment group create --resource-group $(resourceGroupName) --template-file AzureDevops/aciWithARM-master/ARMTemplates/containerInstance.json --parameters AzureDevops/aciWithARM-master/ARMTemplates/param.ContainerInstance.json
+    displayName: 'Azure CLI Deployment'
+    env:
+      ARM_CLIENT_ID: $(servicePrincipalId)
+      ARM_CLIENT_SECRET: $(servicePrincipalKey)
+      ARM_SUBSCRIPTION_ID: $(subscriptionId)
+      ARM_TENANT_ID: $(tenantId)
+
+  - script: |
+      az group delete --name $(resourceGroupName) --yes --no-wait
+    displayName: 'Cleanup Resource Group'
+    env:
+      ARM_CLIENT_ID: $(servicePrincipalId)
+      ARM_CLIENT_SECRET: $(servicePrincipalKey)
+      ARM_SUBSCRIPTION_ID: $(subscriptionId)
+      ARM_TENANT_ID: $(tenantId)
