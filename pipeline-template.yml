@@ -1,0 +1,47 @@
+trigger:
+- master
+
+pr:
+- '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+parameters:
+- name: aciName
+  displayName: 'ACI Name'
+  default: 'my-aci'
+  type: string
+- name: containerName
+  displayName: 'Container Name'
+  default: 'my-container'
+  type: string
+- name: dockerImage
+  displayName: 'Docker Image'
+  default: 'my-docker-image:latest'
+  type: string
+- name: cpuRequest
+  displayName: 'CPU Request'
+  default: '0.5'
+  type: string
+- name: memoryRequest
+  displayName: 'Memory Request'
+  default: '2'
+  type: string
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+
+- script: |
+    # Install Azure CLI
+    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+    # Authenticate to Azure using service connection
+    az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+    
+    # Deploy the ACI using the parameterized template file and parameters
+    az container create --resource-group $(resourceGroupName) --file template-aci.json --parameters aciName=$(aciName) containerName=$(containerName) dockerImage=$(dockerImage) cpuRequest=$(cpuRequest) memoryRequest=$(memoryRequest)
+  displayName: 'Create ACI Container'
