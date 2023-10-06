@@ -14,4 +14,4 @@ COPY . /app
 ENV NAME World
 
 # Run python when the container launches
-CMD ["python", "app.py"]
+CMD ["python", "test.py"]
