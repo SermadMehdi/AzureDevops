@@ -1,4 +1,4 @@
 # Print "Hello, World!" to the console
-print("Hello, World from Pipeline trigger!")
+print("Hello, World from Container trigger!")
 
 
